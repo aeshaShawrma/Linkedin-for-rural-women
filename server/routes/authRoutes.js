@@ -14,8 +14,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 router.get("/profile", auth, getProfile);
-//debug
-console.log("auth:", typeof auth);
-console.log("updateProfile:", typeof updateProfile);
+
 router.put("/profile", auth, updateProfile);
 module.exports = router;
