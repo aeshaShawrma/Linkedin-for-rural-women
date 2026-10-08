@@ -30,7 +30,7 @@ function Register() {
     try {
       const response = await API.post("/auth/register", formData);
 
-      setMessage(response.data.message);
+      setMessage(response.data.message || "Account created successfully");
 
       setTimeout(() => {
         navigate("/login");

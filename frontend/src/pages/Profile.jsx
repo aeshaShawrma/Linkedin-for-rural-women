@@ -1,10 +1,11 @@
+import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 
 function Profile() {
   const navigate = useNavigate();
-
+  
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
 
@@ -23,15 +24,7 @@ function Profile() {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await API.put(
-      "/auth/profile",
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
+    const response = await API.put("/auth/profile", formData);
 
     setUser(response.data.user);
     setFormData({
@@ -62,14 +55,7 @@ function Profile() {
 
       try {
 
-        const response = await API.get(
-          "/auth/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
+        const response = await API.get("/auth/profile");
        
         setUser(response.data.user);
 
@@ -84,18 +70,19 @@ function Profile() {
 
       } catch (error) {
 
-        localStorage.removeItem("token");
-        setMessage("Session expired. Please login again.");
-
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
+        if (error.response?.status === 401) {
+          logout();
+          navigate("/login", { replace: true });
+        } 
+        else {
+          setMessage("Failed to load profile. Please try again.");
+        }
       }
     };
 
     fetchProfile();
 
-  }, [navigate]);
+  }, [navigate,logout]);
 
   if (!user) {
     return (
@@ -194,6 +181,7 @@ function Profile() {
       </button>
 
       <button
+        type="button"
         className="secondary-btn"
         onClick={() => setEditing(false)}
       >
