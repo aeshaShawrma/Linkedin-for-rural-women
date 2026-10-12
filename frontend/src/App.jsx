@@ -6,34 +6,33 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
 
-      <nav className="navbar">
-
-        <div className="logo">
-          <span className="logo-shell">◒</span>
-          RuralConnect
-        </div>
-
-        <div className="nav-links">
-          <a href="/">Home</a>
-          <a href="/register">Join Us</a>
-          <a href="/login">Login</a>
-        </div>
-
-      </nav>
+    <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-
     </BrowserRouter>
   );
 }
