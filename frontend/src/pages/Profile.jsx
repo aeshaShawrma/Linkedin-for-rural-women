@@ -5,7 +5,7 @@ import API from "../api/api";
 
 function Profile() {
   const navigate = useNavigate();
-  
+  const { logout } = useAuth();
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
 
